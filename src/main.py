@@ -1,21 +1,39 @@
 from __future__ import annotations
 
 import logging
+import os
 import time
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api.v1.embeddings import router as embeddings_router
 from src.core.config import settings
 from src.core.exceptions import APIException, api_exception_handler, unhandled_exception_handler
 from src.core.logging import structured_logger
 from src.core.middleware import RequestIDMiddleware, build_cors_origins, get_request_id
 from src.core.schemas import APIResponse
+from src.embeddings.model import get_embedding_model, warmup_embedding_model
 
 
 def create_app() -> FastAPI:
     structured_logger.init(settings.log_level)
     logger = logging.getLogger(settings.service_name)
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        if os.getenv("EMBEDDINGS_SKIP_WARMUP") != "1":
+            await warmup_embedding_model()
+        logger.info(
+            "service_startup",
+            extra={
+                "service": settings.service_name,
+                "environment": settings.environment,
+                "log_level": settings.log_level,
+            },
+        )
+        yield
 
     app = FastAPI(
         title=settings.service_name,
@@ -23,6 +41,7 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",
+        lifespan=lifespan,
     )
 
     app.add_middleware(
@@ -36,17 +55,8 @@ def create_app() -> FastAPI:
     app.add_middleware(RequestIDMiddleware)
     app.add_exception_handler(APIException, api_exception_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)
-
-    @app.on_event("startup")
-    async def log_startup() -> None:
-        logger.info(
-            "service_startup",
-            extra={
-                "service": settings.service_name,
-                "environment": settings.environment,
-                "log_level": settings.log_level,
-            },
-        )
+    app.include_router(embeddings_router)
+    app.dependency_overrides[get_embedding_model] = get_embedding_model
 
     @app.middleware("http")
     async def request_logging_middleware(request: Request, call_next):
