@@ -17,3 +17,7 @@ class EmbeddingResponse(BaseModel):
     song_id: str
     embedding: List[float]
     model_version: str = "v1"
+
+    model_config = {
+        "protected_namespaces": (),
+    }

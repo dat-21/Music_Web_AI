@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 import time
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,12 +21,27 @@ def create_app() -> FastAPI:
     structured_logger.init(settings.log_level)
     logger = logging.getLogger(settings.service_name)
 
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        if os.getenv("EMBEDDINGS_SKIP_WARMUP") != "1":
+            await warmup_embedding_model()
+        logger.info(
+            "service_startup",
+            extra={
+                "service": settings.service_name,
+                "environment": settings.environment,
+                "log_level": settings.log_level,
+            },
+        )
+        yield
+
     app = FastAPI(
         title=settings.service_name,
         version="0.1.0",
         docs_url="/docs",
         redoc_url="/redoc",
         openapi_url="/openapi.json",
+        lifespan=lifespan,
     )
 
     app.add_middleware(
@@ -41,19 +57,6 @@ def create_app() -> FastAPI:
     app.add_exception_handler(Exception, unhandled_exception_handler)
     app.include_router(embeddings_router)
     app.dependency_overrides[get_embedding_model] = get_embedding_model
-
-    @app.on_event("startup")
-    async def log_startup() -> None:
-        if os.getenv("EMBEDDINGS_SKIP_WARMUP") != "1":
-            await warmup_embedding_model()
-        logger.info(
-            "service_startup",
-            extra={
-                "service": settings.service_name,
-                "environment": settings.environment,
-                "log_level": settings.log_level,
-            },
-        )
 
     @app.middleware("http")
     async def request_logging_middleware(request: Request, call_next):
