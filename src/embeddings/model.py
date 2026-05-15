@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Iterable, List, TYPE_CHECKING
+from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import numpy as np
@@ -18,13 +19,13 @@ class EmbeddingModel:
 
             self.model = SentenceTransformer(self.model_name)
 
-    def generate(self, text: str) -> "np.ndarray":
+    def generate(self, text: str) -> np.ndarray:
         """Generate 384-dim embedding."""
         if self.model is None:
             raise ValueError("Model not warmed up")
         return self.model.encode(text)
 
-    def generate_batch(self, texts: Iterable[str]) -> List["np.ndarray"]:
+    def generate_batch(self, texts: Iterable[str]) -> list[np.ndarray]:
         """Generate embeddings for a batch of texts."""
         if self.model is None:
             raise ValueError("Model not warmed up")

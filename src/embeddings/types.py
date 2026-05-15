@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import List
-
 from pydantic import BaseModel, Field
 
 
@@ -15,7 +13,7 @@ class SongEmbeddingRequest(BaseModel):
 
 class EmbeddingResponse(BaseModel):
     song_id: str
-    embedding: List[float]
+    embedding: list[float]
     model_version: str = "v1"
 
     model_config = {

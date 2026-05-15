@@ -6,12 +6,13 @@ from src.embeddings.model import EmbeddingModel, get_embedding_model
 from src.embeddings.types import EmbeddingResponse, SongEmbeddingRequest
 
 router = APIRouter(prefix="/v1/embeddings", tags=["embeddings"])
+_embedding_model_dep = Depends(get_embedding_model)
 
 
 @router.post("/generate", response_model=EmbeddingResponse)
 async def generate_embedding(
     request: SongEmbeddingRequest,
-    model: EmbeddingModel = Depends(get_embedding_model),
+    model: EmbeddingModel = _embedding_model_dep,
 ) -> EmbeddingResponse:
     text = f"{request.artist} - {request.title} {request.lyrics}".strip()
     embedding = model.generate(text)

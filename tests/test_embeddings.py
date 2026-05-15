@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from fastapi.testclient import TestClient
-
 from src.embeddings.model import get_embedding_model
 from src.embeddings.types import SongEmbeddingRequest
 from src.main import app
