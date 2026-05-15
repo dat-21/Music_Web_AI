@@ -8,9 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.config import settings
 from src.core.exceptions import APIException, api_exception_handler, unhandled_exception_handler
-from src.core.middleware import RequestIDMiddleware, get_request_id, build_cors_origins
-from src.core.schemas import APIResponse
 from src.core.logging import structured_logger
+from src.core.middleware import RequestIDMiddleware, build_cors_origins, get_request_id
+from src.core.schemas import APIResponse
 
 
 def create_app() -> FastAPI:
@@ -53,10 +53,11 @@ def create_app() -> FastAPI:
         started_at = time.perf_counter()
         response = await call_next(request)
         duration_ms = round((time.perf_counter() - started_at) * 1000, 2)
+        request_id = request.scope.get("request_id") or get_request_id()
         logger.info(
             "request_completed",
             extra={
-                "request_id": get_request_id(),
+                "request_id": request_id,
                 "service": settings.service_name,
                 "method": request.method,
                 "path": request.url.path,
