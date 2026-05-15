@@ -22,6 +22,23 @@ __pycache__/
 .vscode/
 .idea/
 
+# Python packaging
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+dist/
+build/
+*.egg-info/
+
+# Poetry
+poetry.lock
+
+# Local env files
+.env
+.env.*
+
 # OS
 .DS_Store
 Thumbs.db
