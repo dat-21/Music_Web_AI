@@ -8,9 +8,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.config import settings
 from src.core.exceptions import APIException, api_exception_handler, unhandled_exception_handler
-from src.core.middleware import RequestIDMiddleware, get_request_id, build_cors_origins
-from src.core.schemas import APIResponse
 from src.core.logging import structured_logger
+from src.core.middleware import RequestIDMiddleware, build_cors_origins, get_request_id
+from src.core.schemas import APIResponse
 
 
 def create_app() -> FastAPI:

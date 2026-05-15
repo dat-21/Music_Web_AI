@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-import json
 import logging
 import re
 
 from fastapi.testclient import TestClient
-
-from src.core.middleware import request_id
 from src.main import app
 
 
