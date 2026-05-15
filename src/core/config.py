@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     service_name: str = "ai-search"
     log_level: str = "INFO"
     environment: str = "development"
+    cors_origins: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
