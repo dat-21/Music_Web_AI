@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from fastapi.testclient import TestClient
 
 from src.embeddings.model import get_embedding_model
@@ -21,8 +20,7 @@ class DummyEmbeddingModel:
         return DummyEmbedding()
 
 
-@pytest.mark.asyncio
-async def test_embedding_generation() -> None:
+def test_embedding_generation() -> None:
     app.dependency_overrides[get_embedding_model] = lambda: DummyEmbeddingModel()
     try:
         request = SongEmbeddingRequest(
