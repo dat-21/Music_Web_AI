@@ -33,7 +33,7 @@ build/
 *.egg-info/
 
 # Poetry
-poetry.lock
+
 
 # Local env files
 .env
