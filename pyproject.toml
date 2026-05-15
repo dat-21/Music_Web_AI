@@ -8,6 +8,9 @@ packages = [{ include = "src" }]
 [tool.poetry.dependencies]
 python = "^3.11"
 fastapi = "0.104.1"
+sentence-transformers = "2.2.2"
+numpy = "1.24.3"
+torch = "2.1.0"
 uvicorn = { extras = ["standard"], version = "0.24.0" }
 pydantic = { version = "2.5.0", extras = ["email"] }
 pydantic-settings = "2.1.0"
