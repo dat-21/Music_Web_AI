@@ -8,7 +8,11 @@ def test_health_endpoint_returns_healthy() -> None:
         response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "healthy", "service": "ai-search"}
+    assert response.json() == {
+        "data": {"status": "healthy", "service": "ai-search"},
+        "status": "success",
+        "metadata": None,
+    }
 
 
 def test_ready_endpoint_returns_ready() -> None:
@@ -16,4 +20,8 @@ def test_ready_endpoint_returns_ready() -> None:
         response = client.get("/ready")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "ready"}
+    assert response.json() == {
+        "data": {"status": "ready"},
+        "status": "success",
+        "metadata": None,
+    }
