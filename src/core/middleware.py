@@ -21,6 +21,7 @@ class RequestIDMiddleware:
 
         headers = Headers(scope=scope)
         incoming_request_id = headers.get("X-Request-ID") or str(uuid4())
+        scope["request_id"] = incoming_request_id
         token = request_id.set(incoming_request_id)
 
         async def send_wrapper(message: Message) -> None:
