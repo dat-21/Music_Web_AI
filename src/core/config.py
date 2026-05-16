@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     environment: str = "development"
     cors_origins: str | None = None
+    redis_url: str = "redis://localhost:6379"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

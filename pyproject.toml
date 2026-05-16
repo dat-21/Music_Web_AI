@@ -13,6 +13,8 @@ numpy = "1.24.3"
 torch = "2.1.0"
 huggingface-hub = "0.14.1"
 tokenizers = "0.13.3"
+redis = "5.0.1"
+prometheus-client = "0.20.0"
 uvicorn = { extras = ["standard"], version = "0.24.0" }
 pydantic = { version = "2.5.0", extras = ["email"] }
 pydantic-settings = "2.1.0"
