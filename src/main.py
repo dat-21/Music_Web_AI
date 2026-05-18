@@ -9,6 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.v1.embeddings import router as embeddings_router
+from src.api.v1.vector_store import router as vector_store_router
 from src.core.config import settings
 from src.core.exceptions import APIException, api_exception_handler, unhandled_exception_handler
 from src.core.logging import structured_logger
@@ -56,6 +57,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(APIException, api_exception_handler)
     app.add_exception_handler(Exception, unhandled_exception_handler)
     app.include_router(embeddings_router)
+    app.include_router(vector_store_router)
     app.dependency_overrides[get_embedding_model] = get_embedding_model
 
     @app.middleware("http")
