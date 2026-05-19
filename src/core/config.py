@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     environment: str = "development"
     cors_origins: str | None = None
     redis_url: str = "redis://localhost:6379"
+    faiss_index_path: str = "/data/faiss.index"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
