@@ -2,24 +2,95 @@
 
 ## Status
 
-Planned (not implemented in codebase yet).
+Implemented.
 
 ## Goal
 
-Introduce a FAISS-based vector store with HNSW + IVF-PQ to enable billion-scale vector search with low latency.
+Introduce a FAISS-based vector store with HNSW + IVF-PQ to enable fast vector search with cosine similarity.
 
-## Planned Components
+## Architecture Overview
 
-- Vector record schema (song_id, embedding, metadata)
-- Search request schema (query_embedding, limit, threshold)
-- FAISS store class with:
-  - Index build (HNSW + IVF-PQ)
-  - Add vectors
-  - Search with cosine similarity
-- API endpoints:
-  - POST /v1/vector-store/add
-  - POST /v1/vector-store/search
-  - GET /v1/vector-store/health
+- FAISS store: [src/vector_store/faiss_store.py](src/vector_store/faiss_store.py)
+- Vector schemas: [src/vector_store/types.py](src/vector_store/types.py)
+- API endpoints: [src/api/v1/vector_store.py](src/api/v1/vector_store.py)
+- Router wiring: [src/main.py](src/main.py)
+
+## Index Design
+
+- Quantizer: HNSW
+- Main index: IVF-PQ
+- Similarity: cosine via L2-normalization + inner product
+- Training: random float32 vectors at index build time
+
+## API Endpoints
+
+### POST /v1/vector-store/add
+
+Body (list of VectorRecord):
+
+```json
+[
+  {
+    "song_id": "song-a",
+    "embedding": [0.1, 0.2, ...],
+    "metadata": {"genre": "rock"}
+  }
+]
+```
+
+Response:
+
+```json
+{
+  "data": {"added": 1},
+  "status": "success",
+  "metadata": null
+}
+```
+
+### POST /v1/vector-store/search
+
+Body:
+
+```json
+{
+  "query_embedding": [0.1, 0.2, ...],
+  "limit": 10,
+  "threshold": 0.7
+}
+```
+
+Response:
+
+```json
+{
+  "data": [
+    {"song_id": "song-a", "score": 0.93, "metadata": {"genre": "rock"}}
+  ],
+  "status": "success",
+  "metadata": null
+}
+```
+
+### GET /v1/vector-store/health
+
+Response:
+
+```json
+{
+  "data": {"ready": true, "trained": true, "total_vectors": 100},
+  "status": "success",
+  "metadata": null
+}
+```
+
+## Tests
+
+- Add/search/health test: [tests/test_vector_store.py](tests/test_vector_store.py)
+
+## Dependencies
+
+- faiss-cpu 1.7.4 in [pyproject.toml](pyproject.toml)
 
 ## Performance Targets
 
@@ -27,17 +98,7 @@ Introduce a FAISS-based vector store with HNSW + IVF-PQ to enable billion-scale 
 - Search < 50ms p95
 - Recall@10 > 0.85
 
-## Test Plan
-
-- Index build and search accuracy tests
-- Load test with 100k vectors
-- Health endpoint validation
-
-## Dependencies
-
-- faiss-cpu 1.7.4 (or faiss-gpu for production)
-
 ## Notes
 
-- Design should use float32 embeddings and store metadata separately.
-- Consider sharding or IVF tuning parameters for large-scale workloads.
+- Embeddings are normalized before add/search to enable cosine similarity.
+- Metadata is stored in memory alongside FAISS ids.
