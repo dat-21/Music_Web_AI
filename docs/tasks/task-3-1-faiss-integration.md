@@ -25,7 +25,9 @@ Introduce a FAISS-based vector store with HNSW + IVF-PQ to enable fast vector se
 ## API Endpoints
 
 ### POST /v1/vector-store/add
+
 Body (list of VectorRecord):
+
 ```json
 [
   {
@@ -37,6 +39,7 @@ Body (list of VectorRecord):
 ```
 
 Response:
+
 ```json
 {
   "data": {"added": 1},
@@ -46,7 +49,9 @@ Response:
 ```
 
 ### POST /v1/vector-store/search
+
 Body:
+
 ```json
 {
   "query_embedding": [0.1, 0.2, ...],
@@ -56,6 +61,7 @@ Body:
 ```
 
 Response:
+
 ```json
 {
   "data": [
@@ -67,7 +73,9 @@ Response:
 ```
 
 ### GET /v1/vector-store/health
+
 Response:
+
 ```json
 {
   "data": {"ready": true, "trained": true, "total_vectors": 100},

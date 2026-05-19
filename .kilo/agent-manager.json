@@ -1,9 +1,21 @@
 {
-  "worktrees": {},
+  "worktrees": {
+    "wt-1779035800034-2": {
+      "branch": "polydactyl-kumquat",
+      "path": "d:\\code\\Project\\Music_Web_AI\\.kilo\\worktrees\\polydactyl-kumquat",
+      "parentBranch": "feature/embedding-pipeline",
+      "createdAt": "2026-05-17T16:36:40.034Z",
+      "remote": "origin"
+    }
+  },
   "sessions": {
     "ses_1e137f173ffepXVtGYofTPcvrp": {
       "worktreeId": null,
       "createdAt": "2026-05-13T00:41:28.006Z"
+    },
+    "ses_1c933ebb4ffeIB2thTMgvvKgUX": {
+      "worktreeId": "wt-1779035800034-2",
+      "createdAt": "2026-05-17T16:36:44.754Z"
     }
   },
   "tabOrder": {
@@ -11,5 +23,8 @@
       "pending:1"
     ]
   },
+  "worktreeOrder": [
+    "wt-1779035800034-2"
+  ],
   "sessionsCollapsed": true
 }
