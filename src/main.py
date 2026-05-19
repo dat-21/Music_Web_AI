@@ -16,6 +16,8 @@ from src.core.logging import structured_logger
 from src.core.middleware import RequestIDMiddleware, build_cors_origins, get_request_id
 from src.core.schemas import APIResponse
 from src.embeddings.model import get_embedding_model, warmup_embedding_model
+from src.vector_store.faiss_store import get_vector_store, set_vector_store
+from src.vector_store.persistence import get_persistence
 
 
 def create_app() -> FastAPI:
@@ -24,6 +26,10 @@ def create_app() -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
+        persistence = get_persistence()
+        loaded_store = await persistence.load()
+        set_vector_store(loaded_store)
+        _.state.vector_store = loaded_store
         if os.getenv("EMBEDDINGS_SKIP_WARMUP") != "1":
             await warmup_embedding_model()
         logger.info(
@@ -35,6 +41,7 @@ def create_app() -> FastAPI:
             },
         )
         yield
+        await persistence.save(get_vector_store())
 
     app = FastAPI(
         title=settings.service_name,

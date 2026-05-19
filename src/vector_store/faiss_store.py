@@ -124,3 +124,8 @@ _vector_store = FAISSStore()
 
 def get_vector_store() -> FAISSStore:
     return _vector_store
+
+
+def set_vector_store(store: FAISSStore) -> None:
+    global _vector_store
+    _vector_store = store
