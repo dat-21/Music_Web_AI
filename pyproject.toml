@@ -15,6 +15,7 @@ huggingface-hub = "0.14.1"
 tokenizers = "0.13.3"
 redis = "5.0.1"
 prometheus-client = "0.20.0"
+faiss-cpu = "1.7.4"
 uvicorn = { extras = ["standard"], version = "0.24.0" }
 pydantic = { version = "2.5.0", extras = ["email"] }
 pydantic-settings = "2.1.0"
