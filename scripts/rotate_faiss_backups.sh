@@ -9,6 +9,6 @@ ls -t "$BASE_DIR"/"$BASE_NAME".*.bak 2>/dev/null | tail -n +6 | while read -r ol
   ts=$(basename "$old")
   ts=${ts#"$BASE_NAME".}
   ts=${ts%.bak}
-  meta="$BASE_DIR/$BASE_NAME.metadata.$ts.bak"
+  meta="$BASE_DIR/$BASE_NAME.metadata.json.$ts.bak"
   rm -f "$old" "$meta"
 done

@@ -29,14 +29,14 @@ Shutdown:
 ## Persistence Behavior
 
 - Index written to /data/faiss.index (configurable via settings).
-- Metadata stored alongside as /data/faiss.index.metadata.
+- Metadata stored alongside as /data/faiss.index.metadata.json.
 - Writes use temp files + atomic replace.
 - If metadata is corrupted or mismatched, it is reset to empty.
 
 ## Backup Rotation
 
 - Keep last 5 snapshots.
-- Snapshot names: faiss.index.<timestamp>.bak and faiss.index.metadata.<timestamp>.bak.
+- Snapshot names: faiss.index.<timestamp>.bak and faiss.index.metadata.json.<timestamp>.bak.
 - Script for manual rotation: [scripts/rotate_faiss_backups.sh](scripts/rotate_faiss_backups.sh).
 
 ## Tests
